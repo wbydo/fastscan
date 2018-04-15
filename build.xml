@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<project name="scanInterface" default="compile" basedir="./">
+  <property name="junit" value="lib/junit-4.12.jar" />
+  <property name="hamcrest" value="lib/hamcrest-core-1.3.jar" />
+
+  <target name="compile" depends="delete">
+    <mkdir dir="class" />
+    <javac srcdir="src/main" destdir="class" includeantruntime="false" encoding="utf-8"/>
+    <jar destfile="scan.jar" basedir="class" manifest="MANIFEST.MF" />
+  </target>
+
+  <target name="compile-test" depends="delete">
+    <mkdir dir="class" />
+    <javac srcdir="src" destdir="class" includeantruntime="false" encoding="utf-8">
+      <classpath path="${junit}" />
+      <classpath path="${hamcrest}" />
+    </javac>
+  </target>
+
+  <target name="test" depends="compile-test">
+    <junit printsummary="true">
+      <classpath>
+        <pathelement path="${junit}" />
+        <pathelement path="${hamcrest}" />
+        <pathelement path="class"/>
+      </classpath>
+      <formatter type="brief" />
+      <batchtest>
+        <fileset dir="class" includes="**/*Test.class"/>
+      </batchtest>
+    </junit>
+  </target>
+
+  <target name="delete">
+    <delete dir="class" />
+    <delete>
+      <fileset dir="." includes="TEST*.txt" />
+    </delete>
+  </target>
+</project>
